@@ -2,12 +2,14 @@
 
 import { useState, useRef } from 'react'
 import { Upload, Loader2, ImageIcon, X } from 'lucide-react'
+import { useLanguage } from './LanguageProvider'
 
 interface Props {
   onUploaded: (url: string, analysis: any) => void
 }
 
 export default function PhotoUpload({ onUploaded }: Props) {
+  const { t } = useLanguage()
   const [preview, setPreview] = useState<string | null>(null)
   const [analyzing, setAnalyzing] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -51,9 +53,9 @@ export default function PhotoUpload({ onUploaded }: Props) {
 
   return (
     <div>
-      <h2 className="mb-2 text-2xl font-bold">Upload Your Photo</h2>
+      <h2 className="mb-2 text-2xl font-bold">{t('upload_title')}</h2>
       <p className="mb-6 text-gray-400">
-        Drop any photo and our AI will analyze it to suggest the perfect video.
+        {t('upload_subtitle')}
       </p>
 
       {!preview ? (
@@ -75,8 +77,8 @@ export default function PhotoUpload({ onUploaded }: Props) {
           <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-brand-500/20">
             <Upload className="h-7 w-7 text-brand-500" />
           </div>
-          <p className="mb-1 font-semibold">Drop your photo here</p>
-          <p className="text-sm text-gray-500">or click to browse · JPG, PNG · max 10MB</p>
+          <p className="mb-1 font-semibold">{t('upload_drop')}</p>
+          <p className="text-sm text-gray-500">{t('upload_browse')}</p>
           <input
             ref={inputRef}
             type="file"
@@ -91,8 +93,8 @@ export default function PhotoUpload({ onUploaded }: Props) {
           {analyzing ? (
             <div className="absolute inset-0 flex flex-col items-center justify-center rounded-2xl bg-gray-950/80 backdrop-blur-sm">
               <Loader2 className="mb-3 h-8 w-8 animate-spin text-brand-500" />
-              <p className="font-semibold">Analyzing your photo...</p>
-              <p className="text-sm text-gray-400">Detecting subject, mood &amp; composition</p>
+              <p className="font-semibold">{t('upload_analyzing')}</p>
+              <p className="text-sm text-gray-400">{t('upload_analyzing_sub')}</p>
             </div>
           ) : (
             <button

@@ -5,10 +5,12 @@ import { Upload, Sparkles, Video, Download } from 'lucide-react'
 import PhotoUpload from '@/components/PhotoUpload'
 import StoryboardPanel from '@/components/StoryboardPanel'
 import GeneratePanel from '@/components/GeneratePanel'
+import { useLanguage } from '@/components/LanguageProvider'
 
 type Step = 'upload' | 'storyboard' | 'generate' | 'result'
 
 export default function CreatePage() {
+  const { t } = useLanguage()
   const [step, setStep] = useState<Step>('upload')
   const [photoUrl, setPhotoUrl] = useState<string | null>(null)
   const [photoAnalysis, setPhotoAnalysis] = useState<any>(null)
@@ -16,10 +18,10 @@ export default function CreatePage() {
   const [videoUrl, setVideoUrl] = useState<string | null>(null)
 
   const steps = [
-    { id: 'upload', label: 'Upload', icon: Upload },
-    { id: 'storyboard', label: 'Storyboard', icon: Sparkles },
-    { id: 'generate', label: 'Generate', icon: Video },
-    { id: 'result', label: 'Result', icon: Download },
+    { id: 'upload', label: t('step_upload'), icon: Upload },
+    { id: 'storyboard', label: t('step_storyboard'), icon: Sparkles },
+    { id: 'generate', label: t('step_generate'), icon: Video },
+    { id: 'result', label: t('step_result'), icon: Download },
   ]
   const currentIdx = steps.findIndex((s) => s.id === step)
 
@@ -61,14 +63,14 @@ export default function CreatePage() {
         )}
         {step === 'result' && videoUrl && (
           <div className="text-center">
-            <h2 className="mb-6 text-2xl font-bold">Your Video is Ready! 🎉</h2>
+            <h2 className="mb-6 text-2xl font-bold">{t('result_title')}</h2>
             <video src={videoUrl} controls autoPlay loop className="mx-auto mb-6 max-h-[500px] rounded-xl" />
             <div className="flex justify-center gap-4">
               <a href={videoUrl} download className="btn-primary">
-                <Download className="mr-2 inline h-4 w-4" /> Download
+                <Download className="mr-2 inline h-4 w-4" /> {t('result_download')}
               </a>
               <button onClick={() => { setStep('upload'); setVideoUrl(null); setPhotoUrl(null) }} className="btn-secondary">
-                Create Another
+                {t('result_another')}
               </button>
             </div>
           </div>

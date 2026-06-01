@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { ChevronLeft, ChevronRight, Play, Pause } from 'lucide-react'
+import { useLanguage } from './LanguageProvider'
 
 interface Example {
   id: string
@@ -55,6 +56,7 @@ const EXAMPLES: Example[] = [
 ]
 
 export default function ShowcaseSlideshow() {
+  const { t } = useLanguage()
   const [active, setActive] = useState(0)
   const [playing, setPlaying] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -93,8 +95,8 @@ export default function ShowcaseSlideshow() {
   return (
     <div className="mx-auto max-w-5xl">
       <div className="mb-8 text-center">
-        <h2 className="mb-2 text-3xl font-bold">See What You Can Create</h2>
-        <p className="text-gray-400">Real photos transformed into videos with AI</p>
+        <h2 className="mb-2 text-3xl font-bold">{t('showcase_title')}</h2>
+        <p className="text-gray-400">{t('showcase_subtitle')}</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_320px]">

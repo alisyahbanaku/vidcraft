@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Loader2, Sparkles, Pencil, Plus, Trash2, ChevronLeft, Wand2 } from 'lucide-react'
 import { MOOD_PRESETS, DURATION_OPTIONS, type Scene } from '@/lib/storyboard'
+import { useLanguage } from './LanguageProvider'
 
 interface Props {
   photoUrl: string
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export default function StoryboardPanel({ photoUrl, analysis, onConfirm, onBack }: Props) {
+  const { t } = useLanguage()
   const [mode, setMode] = useState<'auto' | 'manual'>('auto')
   const [selectedMood, setSelectedMood] = useState<string>('cinematic')
   const [duration, setDuration] = useState(10)
@@ -70,13 +72,13 @@ export default function StoryboardPanel({ photoUrl, analysis, onConfirm, onBack 
   return (
     <div>
       <button onClick={onBack} className="mb-4 flex items-center text-sm text-gray-400 hover:text-white">
-        <ChevronLeft className="mr-1 h-4 w-4" /> Back
+        <ChevronLeft className="mr-1 h-4 w-4" /> {t('back')}
       </button>
 
       <div className="mb-6 flex flex-col gap-6 sm:flex-row">
         <img src={photoUrl} alt="" className="h-40 w-40 rounded-xl object-cover" />
         <div className="flex-1">
-          <h2 className="mb-2 text-2xl font-bold">Build Your Storyboard</h2>
+          <h2 className="mb-2 text-2xl font-bold">{t('sb_title')}</h2>
           {analysis?.summary && (
             <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-brand-500/10 px-3 py-1 text-sm text-brand-300">
               <Sparkles className="h-3.5 w-3.5" />
@@ -90,7 +92,7 @@ export default function StoryboardPanel({ photoUrl, analysis, onConfirm, onBack 
                 mode === 'auto' ? 'bg-brand-600 text-white' : 'bg-gray-800 text-gray-400'
               }`}
             >
-              <Wand2 className="mr-1.5 inline h-3.5 w-3.5" /> AI Auto
+              <Wand2 className="mr-1.5 inline h-3.5 w-3.5" /> {t('sb_auto')}
             </button>
             <button
               onClick={() => setMode('manual')}
@@ -98,7 +100,7 @@ export default function StoryboardPanel({ photoUrl, analysis, onConfirm, onBack 
                 mode === 'manual' ? 'bg-brand-600 text-white' : 'bg-gray-800 text-gray-400'
               }`}
             >
-              <Pencil className="mr-1.5 inline h-3.5 w-3.5" /> Manual
+              <Pencil className="mr-1.5 inline h-3.5 w-3.5" /> {t('sb_manual')}
             </button>
           </div>
         </div>
@@ -106,7 +108,7 @@ export default function StoryboardPanel({ photoUrl, analysis, onConfirm, onBack 
 
       {/* Mood selector */}
       <div className="mb-6">
-        <label className="mb-2 block text-sm font-medium text-gray-300">Mood</label>
+        <label className="mb-2 block text-sm font-medium text-gray-300">{t('sb_mood')}</label>
         <div className="grid grid-cols-3 gap-3">
           {MOOD_PRESETS.map((m) => (
             <button
@@ -126,7 +128,7 @@ export default function StoryboardPanel({ photoUrl, analysis, onConfirm, onBack 
 
       {/* Duration selector */}
       <div className="mb-6">
-        <label className="mb-2 block text-sm font-medium text-gray-300">Duration</label>
+        <label className="mb-2 block text-sm font-medium text-gray-300">{t('sb_duration')}</label>
         <div className="flex gap-3">
           {DURATION_OPTIONS.map((d) => (
             <button
@@ -146,10 +148,10 @@ export default function StoryboardPanel({ photoUrl, analysis, onConfirm, onBack 
       {/* Scenes */}
       <div className="mb-6">
         <div className="mb-2 flex items-center justify-between">
-          <label className="text-sm font-medium text-gray-300">Scenes ({scenes.length})</label>
+          <label className="text-sm font-medium text-gray-300">{t('sb_scenes')} ({scenes.length})</label>
           {mode === 'manual' && (
             <button onClick={addScene} className="flex items-center text-sm text-brand-400 hover:text-brand-300">
-              <Plus className="mr-1 h-4 w-4" /> Add scene
+              <Plus className="mr-1 h-4 w-4" /> {t('sb_add_scene')}
             </button>
           )}
         </div>
@@ -157,7 +159,7 @@ export default function StoryboardPanel({ photoUrl, analysis, onConfirm, onBack 
         {loading ? (
           <div className="flex items-center justify-center rounded-xl border border-gray-700 py-10">
             <Loader2 className="mr-2 h-5 w-5 animate-spin text-brand-500" />
-            <span className="text-gray-400">AI is writing your storyboard...</span>
+            <span className="text-gray-400">{t('sb_writing')}</span>
           </div>
         ) : (
           <div className="space-y-3">
@@ -206,7 +208,7 @@ export default function StoryboardPanel({ photoUrl, analysis, onConfirm, onBack 
         disabled={loading || scenes.length === 0}
         className="btn-primary w-full"
       >
-        Continue · {durationOpt.credits} credits
+        {t('sb_continue')} · {durationOpt.credits} {t('sb_credits')}
       </button>
     </div>
   )
