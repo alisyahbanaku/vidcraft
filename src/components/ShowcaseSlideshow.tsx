@@ -23,7 +23,7 @@ const EXAMPLES: Example[] = [
     category: 'People',
     mood: 'Cinematic',
     thumbnail: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&q=80',
-    video: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
+    video: 'https://videos.pexels.com/video-files/3209828/3209828-hd_1920_1080_25fps.mp4',
     beforeImage: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&q=80',
   },
   {
@@ -32,7 +32,7 @@ const EXAMPLES: Example[] = [
     category: 'Product',
     mood: 'Energetic',
     thumbnail: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80',
-    video: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+    video: 'https://videos.pexels.com/video-files/2169880/2169880-sd_640_360_30fps.mp4',
     beforeImage: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80',
   },
   {
@@ -41,7 +41,7 @@ const EXAMPLES: Example[] = [
     category: 'Nature',
     mood: 'Aesthetic',
     thumbnail: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&q=80',
-    video: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+    video: 'https://videos.pexels.com/video-files/2103099/2103099-sd_640_360_30fps.mp4',
     beforeImage: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&q=80',
   },
   {
@@ -50,7 +50,7 @@ const EXAMPLES: Example[] = [
     category: 'Food',
     mood: 'Cinematic',
     thumbnail: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80',
-    video: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+    video: 'https://videos.pexels.com/video-files/5538137/5538137-hd_1920_1080_25fps.mp4',
     beforeImage: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80',
   },
 ]
@@ -87,10 +87,19 @@ export default function ShowcaseSlideshow() {
       videoRef.current.pause()
       setPlaying(false)
     } else {
-      videoRef.current.play()
+      videoRef.current.play().catch(() => {})
       setPlaying(true)
     }
   }
+
+  // Reset to thumbnail when switching examples
+  useEffect(() => {
+    setPlaying(false)
+    if (videoRef.current) {
+      videoRef.current.pause()
+      videoRef.current.currentTime = 0
+    }
+  }, [active])
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -103,16 +112,20 @@ export default function ShowcaseSlideshow() {
         {/* Main viewer */}
         <div className="relative overflow-hidden rounded-2xl border border-gray-800 bg-black">
           <div className="relative aspect-video">
-            {playing ? (
-              <video
-                ref={videoRef}
-                src={current.video}
-                className="h-full w-full object-cover"
-                onEnded={() => setPlaying(false)}
-                playsInline
-              />
-            ) : (
-              <img src={current.thumbnail} alt={current.title} className="h-full w-full object-cover" />
+            <video
+              ref={videoRef}
+              src={current.video}
+              poster={current.thumbnail}
+              className="h-full w-full object-cover"
+              onEnded={() => setPlaying(false)}
+              playsInline
+              muted
+              preload="metadata"
+            />
+
+            {/* Thumbnail overlay when not playing */}
+            {!playing && (
+              <img src={current.thumbnail} alt={current.title} className="absolute inset-0 h-full w-full object-cover" />
             )}
 
             {/* Overlay */}
